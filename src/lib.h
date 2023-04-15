@@ -7,23 +7,23 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdbool.h>
+#include <time.h>
 
 struct group
 {
-	char name_faculti[200];
-	int group_n;
+	char name_faculti[15];
+	char group_n[21];
 };
 
 struct student
 {
-	bool budget_edu;
+	char budget_edu[8];
 	char name_student[55];
 	char name_kurator[55];
 	int enroll_year;
-	struct group name_faculti;
-	struct group group_n;
-	char name_cafedra;
+	struct group faculti;
+	struct group group;
+	char name_cafedra[200];
 };
 
 /**
@@ -34,9 +34,15 @@ struct student
 
 int check_path_to_files(int number_arguments, char *arr_arguments[]);
 
-int* check_input_data(int *error_data, char path_input_file[]);
+unsigned int* check_input_data(unsigned int *res_check, char path_input_file[]);
 
-int write_out_file();
+void read_from_file(char path_input_file[], struct student *student);
+
+int student_sort(struct student *student, struct student *student_sort, unsigned int *n_students);
+
+void write_out_file(char path_output_file[], struct student *student_sort, int n_sort_students);
+
+void write_on_screen(struct student *student_sort, int n_sort_students);
 
 
 
