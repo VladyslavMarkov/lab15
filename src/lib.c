@@ -29,12 +29,13 @@
 - Перевіряємо чи були присвоєні файли їх вказівникам, як що так тоді закриваємо їх і повертаємо 0, як що ні  повертаємо 3.
 
 */
-int check_path_to_files(int number_arguments, char *arr_arguments[])
+unsigned int check_arguments(int number_arguments, char *arr_arguments[])
 {
 	FILE *output_file;
 	FILE *input_file;
 
 	if (number_arguments > 1) {
+	
 		if (number_arguments != 3)
 			return 2;
 		else {
@@ -66,13 +67,7 @@ int check_path_to_files(int number_arguments, char *arr_arguments[])
  
 - Створення змінних
 	FILE *input_file - вказівник на файл з вхідними даних.
-	unsigned int n_str - номер строки у файлі.
-	char true_false[8] - масив у якому зберігається відповідь на питання чи набжеті студент або ні.
-	char name_student[55] -  масив у якому зберігається ім'я студента.
-	char name_kurator[55] -  масив у якому зберігається ім'я куратора.
-	char name_faculti[15] - масив у якому зберігається назва факультету.
-	char group_code[21] -  масив у якому зберігається номер групи.
-	char name_cafedra[200] - масив у якому зберігається ім'я куратора назва кафедри.
+	
 
 - Перевіряємо чи була введена кількість студентів, як що ні то записуємо у `*(res_check)` 1 ,закриваємо файл та повертаємо 1, як що було введено ідемо далі.
 
@@ -95,86 +90,126 @@ int check_path_to_files(int number_arguments, char *arr_arguments[])
 - Як що цикл було завершено то закриваємо файл, записуємо *(res_check + 1) кількість строк і завершуємо функцію.
 */
 
-unsigned int* check_input_data(unsigned int *res_check, char path_input_file[])
+void check_input_data(unsigned int *res_check, char *path_input_file)
 {	
 	FILE *input_file = fopen(path_input_file, "r");
 	unsigned int n_str;
-	char true_false[8];
-	char name_student[55];
-	char name_kurator[55];
-	char name_faculti[200];
-	char group_code[21];
-	char name_cafedra[200];
-	
-	if(fscanf(input_file,"Кількість студентів:%d", &n_str) != 1)
-	{	
-		*(res_check) = 1;
+	struct student_data test_stedent;
+
+	if (fscanf(input_file, "Кількість студентів:%d", &n_str) != 1) {
+		*(res_check) = 4;
 		fclose(input_file);
-		return res_check;
-	}
-	else if(n_str == 0)
-	{	
-		*(res_check) = 2;
+		return;
+	} else if (n_str == 0) {
+		*(res_check) = 5;
 		fclose(input_file);
-		return res_check;
+		return;
 	}
-	
-	for(unsigned int i = 1; i <= n_str; i++)
-	{	
-		
-		fscanf(input_file,"\n%7[^;\n];", true_false);
-		if(fgetc(input_file) != ' ' && strcmp(true_false, "так") != 0 && strcmp(true_false, "ні") != 0){
-			*(res_check) = 3;
-			*(res_check + 1) = i;
-			fclose(input_file);
-			return res_check;
-		}	
-		
-			
-		fscanf(input_file,"%54[^;\n];", name_student);
-		if(fgetc(input_file) != ' '){
-			*(res_check) = 4;
-			*(res_check + 1) = i;
-			fclose(input_file);
-			return res_check;
-		}
-			
-		fscanf(input_file,"%54[^;\n];", name_kurator);
-		if(fgetc(input_file) != ' '){
-			*(res_check) = 5;
-			*(res_check + 1) = i;
-			fclose(input_file);
-			return res_check;
-		}
-		
-		fscanf(input_file,"%199[^;\n];", name_faculti);
-		if(fgetc(input_file) != ' '){
+
+	for (unsigned int i = 1; i <= n_str; i++) {
+		fscanf(input_file, "\n%7[^;\n];", test_stedent.budget_edu);
+		if (fgetc(input_file) != ' ' && strcmp(test_stedent.budget_edu, "так") != 0 && strcmp(test_stedent.budget_edu, "ні") != 0) {
 			*(res_check) = 6;
 			*(res_check + 1) = i;
 			fclose(input_file);
-			return res_check;
+			return;
 		}
-		
-		fscanf(input_file,"%20[^;\n];", group_code);
-		if(fgetc(input_file) != ' '){
+
+		fscanf(input_file, "%54[^;\n];", test_stedent.name_student);
+		if (fgetc(input_file) != ' ') {
 			*(res_check) = 7;
 			*(res_check + 1) = i;
 			fclose(input_file);
-			return res_check;
+			return;
 		}
-		
-		fscanf(input_file,"%199[^;\n];", name_cafedra);
-		if(fgetc(input_file) != '\n' || (strcmp(name_cafedra, "ВК") != 0 && strcmp(name_cafedra, "ГАК") != 0 && strcmp(name_cafedra, "У1") != 0 && strcmp(name_cafedra, "У2") != 0)){
+
+		fscanf(input_file, "%54[^;\n];", test_stedent.name_kurator);
+		if (fgetc(input_file) != ' ') {
 			*(res_check) = 8;
 			*(res_check + 1) = i;
 			fclose(input_file);
-			return res_check;
+			return;
+		}
+
+		fscanf(input_file, "%199[^;\n];", test_stedent.faculti.name_faculti);
+		if (fgetc(input_file) != ' ') {
+			*(res_check) = 9;
+			*(res_check + 1) = i;
+			fclose(input_file);
+			return;
+		}
+
+		fscanf(input_file, "%20[^;\n];", test_stedent.group.group_n);
+		if (fgetc(input_file) != ' ') {
+			*(res_check) = 10;
+			*(res_check + 1) = i;
+			fclose(input_file);
+			return;
+		}
+
+		fscanf(input_file, "%199[^;\n];", test_stedent.name_cafedra);
+		if (fgetc(input_file) != '\n' || (strcmp(test_stedent.name_cafedra, "ВК") != 0 && strcmp(test_stedent.name_cafedra, "ГАК") != 0 &&
+						  strcmp(test_stedent.name_cafedra, "У1") != 0 && strcmp(test_stedent.name_cafedra, "У2") != 0)) {
+			*(res_check) = 11;
+			*(res_check + 1) = i;
+			fclose(input_file);
+			return;
 		}
 	}
 	fclose(input_file);
+
+	*(res_check + 1) = n_str;
+	return;
+}
+
+void write_info_error(unsigned int *res_check)
+{
+	switch (*res_check){
 	
-	*(res_check + 1) = n_str;			
-	return 0;
+	case 1:
+		printf("Ви не ввели ніякі дані\n");
+		break;
+
+	case 2:
+		printf("Ви ввели некоректну кількість даних\n");
+		break;
+
+	case 3:
+		printf("Не можливо отримати доступ до файлу або дерикторії\n");
+		break;
+		
+	case 4:
+		printf("Ви не ввели кількість студентів\n\n");
+		break;
+
+	case 5:
+		printf("Кількість студентів для сортування дорівню 0\n\n");
+		break;
+
+	case 6:
+		printf("У вас помилка на строці:%d, у полі форма навчання\n\n", *(res_check + 1));
+		break;
+	
+	case 7:
+		printf("У вас помилка на строці:%d, у полі ім'я студента\n\n", *(res_check + 1));
+		break;
+	
+	case 8:
+		printf("У вас помилка на строці:%d, у полі ім'я куратора\n\n", *(res_check + 1));
+		break;
+		
+	case  9:
+		printf("У вас помилка на строці:%d, у полі назва факультету\n\n", *(res_check + 1));
+		break;
+	
+	case  10:
+		printf("У вас помилка на строці:%d, у полі код групи\n\n", *(res_check + 1));
+		break;
+		
+	case  11:
+		printf("У вас помилка на строці:%d, у полі назва кафедри\n\n", *(res_check + 1));
+		break;
+	}
 }
 
 /**
@@ -207,7 +242,24 @@ unsigned int* check_input_data(unsigned int *res_check, char path_input_file[])
 
 - закриваємо файл.
 */
-void read_from_file(char path_input_file[], struct student *student)
+
+
+
+
+struct student_arr* create_arr_students(unsigned int num_students)
+{
+	struct student_arr *array = malloc(sizeof(struct student_arr));
+	array->students = malloc(num_students * sizeof(struct student_data*));
+	array->n_students = num_students;
+	array->n_sort_students = 0;
+	
+	return array;
+}
+
+
+
+
+/*void read_from_file(char path_input_file[], struct student *student)
 {
 	FILE *input_file = fopen(path_input_file, "r");
 	int n_str;
@@ -241,7 +293,7 @@ void read_from_file(char path_input_file[], struct student *student)
 	}
 	
 	fclose(input_file);
-}
+}*/
 
 /**
  Функція student_sort
@@ -264,7 +316,7 @@ void read_from_file(char path_input_file[], struct student *student)
 
 - Повертаємо кількість відсортованих студентів.
 */
-int student_sort(struct student *student, struct student *student_sort, unsigned int *n_students)
+/*int student_sort(struct student *student, struct student *student_sort, unsigned int *n_students)
 {
 	int n_sort_students = 0;
 	
@@ -278,7 +330,7 @@ int student_sort(struct student *student, struct student *student_sort, unsigned
 	}
 	
 	return n_sort_students;
-}
+}*/
 
 /**
  Функція write_out_file
@@ -299,7 +351,7 @@ int student_sort(struct student *student, struct student *student_sort, unsigned
 - Створюємо цикл який буде перебирати вказану кількість елементів у масиві `*student_sort`.
 
 - Записуємо у файл кожний елемент у масиві `*student_sort`.
-*/
+*//*
 void write_out_file(char path_output_file[], struct student *student_sort, int n_sort_students)
 {	
 	FILE *output_file = fopen(path_output_file, "w");
@@ -320,7 +372,7 @@ void write_out_file(char path_output_file[], struct student *student_sort, int n
 	}
 	
 	fclose(output_file);
-}
+}*/
 
 /**
  Функція write_out_file
@@ -338,7 +390,7 @@ void write_out_file(char path_output_file[], struct student *student_sort, int n
 
 - Виводимо на екран кожний елемент у масиві `*student_sort`.
 */
-void write_on_screen(struct student *student_sort, int n_sort_students)
+/*void write_on_screen(struct student *student_sort, int n_sort_students)
 {
 	if(n_sort_students == 0)
 		printf("Кількість студентів дорівнює 0");
@@ -354,7 +406,7 @@ void write_on_screen(struct student *student_sort, int n_sort_students)
 	 				          		  (*(student_sort + i)).name_cafedra,
 	 				          		  (*(student_sort + i)).enroll_year);
 	}
-}
+}*/
 
 
 
