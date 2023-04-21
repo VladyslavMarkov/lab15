@@ -57,8 +57,6 @@
 
 int main(int argc, char* argv[])
 {
-	char path_input_file[4096] = {0};
-	char path_output_file[4096] = {0};
 	unsigned int result_check[2] = {0,0};
 	unsigned int *res_check = result_check;
 	struct student_arr *arr_sort_students;
@@ -84,22 +82,14 @@ int main(int argc, char* argv[])
 	
 	
 	arr_students = create_arr_students(*(res_check + 1));
-	arr_sort_students = create_arr_students(*(res_check + 1));
 	
-	strcat(path_output_file,*(argv + 2));
-	strcat(path_input_file,*(argv + 1));
+	read_from_file(*(argv + 1), arr_students);
 	
+	arr_sort_students = student_sort(arr_students);
 	
-	/*student = malloc(sizeof(struct student) * 4);
-	sort_student = malloc(sizeof(struct student) * 4);
+	write_out_file(*(argv + 2), arr_sort_students);
 	
-	read_from_file(path_input_file, student);
-	
-	n_sort_students = student_sort(student, sort_student, res_check);
-	
-	write_out_file(path_output_file, sort_student, n_sort_students);
-	
-	write_on_screen(sort_student, n_sort_students);*/
+	write_on_screen(arr_sort_students);
 	
 	free(arr_students->students);
 	free(arr_students);

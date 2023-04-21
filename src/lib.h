@@ -52,10 +52,12 @@ struct student_data
 	char name_cafedra[200];
 };
 
+
+
+
 struct student_arr
 {
 	unsigned int n_students;
-	unsigned int n_sort_students;
 	struct student_data **students;
 };
 
@@ -92,12 +94,16 @@ struct student_arr* create_arr_students(unsigned int num_students);
 
 
 
+struct student_data* create_stedent();
+
+
+
 /**
 Функція read_from_file
  \param *res_check - масив у якому зберігаються шлях до файлу із данми.
  \param *student -динамічний масив куди їх треба записати.
 */
-//void read_from_file(char path_input_file[], struct student *student);
+void read_from_file(char *path_input_file, struct student_arr *student);
 
 
 
@@ -109,7 +115,7 @@ struct student_arr* create_arr_students(unsigned int num_students);
  \param *n_students - вказівник на масив де зберіється кількість студентів.
  \return Повертає кількість відсортованих елементів.
 */
-//int student_sort(struct student *student, struct student *student_sort, unsigned int *n_students);
+struct student_arr* student_sort(struct student_arr *student);
 
 
 
@@ -120,7 +126,7 @@ struct student_arr* create_arr_students(unsigned int num_students);
  \param *student_sort -динамічний масив де зберігаються дані для запису.
  \param n_sort_students - кількість елементів у масиві вище.
 */
-//void write_out_file(char path_output_file[], struct student *student_sort, int n_sort_students);
+void write_out_file(char *path_output_file,struct student_arr *student);
 
 
 
@@ -130,7 +136,7 @@ struct student_arr* create_arr_students(unsigned int num_students);
  \param *student_sort -динамічний масив де зберігаються дані для виводу на екран.
  \param n_sort_students - кількість елементів у масиві вище.
 */
-//void write_on_screen(struct student *student_sort, int n_sort_students);
+void write_on_screen(struct student_arr *student);
 
 
 

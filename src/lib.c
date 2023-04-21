@@ -251,7 +251,6 @@ struct student_arr* create_arr_students(unsigned int num_students)
 	struct student_arr *array = malloc(sizeof(struct student_arr));
 	array->students = malloc(num_students * sizeof(struct student_data*));
 	array->n_students = num_students;
-	array->n_sort_students = 0;
 	
 	return array;
 }
@@ -259,7 +258,16 @@ struct student_arr* create_arr_students(unsigned int num_students)
 
 
 
-/*void read_from_file(char path_input_file[], struct student *student)
+struct student_data* create_stedent()
+{
+	struct student_data* student = malloc(sizeof(struct student_data));
+	
+	return student;
+}
+
+
+
+void read_from_file(char *path_input_file, struct student_arr *arr_students)
 {
 	FILE *input_file = fopen(path_input_file, "r");
 	int n_str;
@@ -267,33 +275,34 @@ struct student_arr* create_arr_students(unsigned int num_students)
 	fscanf(input_file,"Кількість студентів:%d", &n_str);
 	
 	for(int i = 0; i < n_str; i++)
-	{	
-		(*(student + i)).enroll_year = 0;
-		fscanf(input_file,"\n%7[^;]; %54[^;]; %54[^;]; %199[^;]; %20[^;]; %199[^;];\n", (*(student + i)).budget_edu, 
-	 								     	 	    	(*(student + i)).name_student,  
-	 								     	 	    	(*(student + i)).name_kurator, 
-	 								     	 	    	(*(student + i)).faculti.name_faculti, 
-	 								     	 	    	(*(student + i)).group.group_n, 
-	 								     	 	    	(*(student + i)).name_cafedra);
-													  
+	{
+		arr_students->students[i] = create_stedent();
+		(*(arr_students->students + i))->enroll_year = 0;
+		fscanf(input_file,"\n%7[^;]; %54[^;]; %54[^;]; %14[^;]; %20[^;]; %10[^;];\n",   (*(arr_students->students + i))->budget_edu, 
+	 								     	 	    	(*(arr_students->students + i))->name_student,  
+	 								     	 	    	(*(arr_students->students + i))->name_kurator, 
+	 								     	 	    	(*(arr_students->students + i))->faculti.name_faculti, 
+	 								     	 	    	(*(arr_students->students + i))->group.group_n, 
+	 								     	 	    	(*(arr_students->students + i))->name_cafedra);
+						  
 	}
 	
 	srand((unsigned int)time(NULL));
 	for(int i = 0; i < n_str ;i++)
 	{
-		if((*(student + i)).enroll_year == 0)
+		if((*(arr_students->students + i))->enroll_year == 0)
 		{
-    			(*(student + i)).enroll_year = rand() % 5 + 2017;
+    			(*(arr_students->students + i))->enroll_year = rand() % 5 + 2017;
     			
     			for(int j = i ;j < n_str; j++)
-    				if(strcmp((*(student + j)).group.group_n, (*(student + i)).group.group_n) == 0)
-    					(*(student + j)).enroll_year = (*(student + i)).enroll_year;
+    				if(strcmp((*(arr_students->students + j))->group.group_n, (*(arr_students->students + i))->group.group_n) == 0)
+    					(*(arr_students->students + j))->enroll_year = (*(arr_students->students + i))->enroll_year;
     		}
 		
 	}
 	
 	fclose(input_file);
-}*/
+}
 
 /**
  Функція student_sort
@@ -316,21 +325,34 @@ struct student_arr* create_arr_students(unsigned int num_students)
 
 - Повертаємо кількість відсортованих студентів.
 */
-/*int student_sort(struct student *student, struct student *student_sort, unsigned int *n_students)
+struct student_arr* student_sort(struct student_arr *arr_students)
 {
-	int n_sort_students = 0;
+	unsigned int n_sort_students = 0;
+	struct student_arr *arr_sort_students;
 	
-	for(unsigned int i = 0;i < *(n_students + 1);i++)
+	for(unsigned int i = 0; i < (arr_students->n_students);i++)
 	{
-		if((*(student + i)).enroll_year == 2018)
+		if((*(arr_students->students + i))->enroll_year == 2018)
 		{
-			(*(student_sort + n_sort_students)) = (*(student + i));
 			n_sort_students++;
 		}
 	}
 	
-	return n_sort_students;
-}*/
+	arr_sort_students = create_arr_students(n_sort_students);
+	
+	for(unsigned int i = 0, j = 0; i < (arr_students->n_students); i++)
+	{
+		if((*(arr_students->students + i))->enroll_year == 2018)
+		{	
+			
+			*(arr_sort_students->students + j) = create_stedent();
+			memcpy(*(arr_sort_students->students + j), *(arr_students->students + i),sizeof(struct student_data));
+			j++;
+		}
+	}
+	
+	return arr_sort_students;
+}
 
 /**
  Функція write_out_file
@@ -351,28 +373,29 @@ struct student_arr* create_arr_students(unsigned int num_students)
 - Створюємо цикл який буде перебирати вказану кількість елементів у масиві `*student_sort`.
 
 - Записуємо у файл кожний елемент у масиві `*student_sort`.
-*//*
-void write_out_file(char path_output_file[], struct student *student_sort, int n_sort_students)
+*/
+void write_out_file(char *path_output_file,struct student_arr *arr_sort_students)
 {	
 	FILE *output_file = fopen(path_output_file, "w");
 	
-	if(n_sort_students == 0)
+	if(arr_sort_students->n_students == 0)
 		fprintf(output_file,"Кількість студентів дорівнює 0");
 	else
 	{	
-		fprintf(output_file,"Кількість студентів дорівнює %d\n", n_sort_students);
-		for(int i = 0; i < n_sort_students; i++)
-			fprintf(output_file,"\n%s; %s; %s; %s; %s; %s; %d;\n", (*(student_sort + i)).budget_edu, 
-	 				      	  		  	       (*(student_sort + i)).name_student,  
-	 				          		  	       (*(student_sort + i)).name_kurator, 
-	 				          		  	       (*(student_sort + i)).faculti.name_faculti, 
-	 				          		  	       (*(student_sort + i)).group.group_n, 
-	 				          		  	       (*(student_sort + i)).name_cafedra,
-	 				          		  	       (*(student_sort + i)).enroll_year);
+		fprintf(output_file,"Кількість студентів дорівнює %d\n", arr_sort_students->n_students);
+		
+		for(unsigned int i = 0; i < (arr_sort_students->n_students); i++)
+			fprintf(output_file,"\n%s; %s; %s; %s; %s; %s; %d;\n", (*(arr_sort_students->students + i))->budget_edu, 
+	 								       (*(arr_sort_students->students + i))->name_student,  
+	 								       (*(arr_sort_students->students + i))->name_kurator, 
+	 								       (*(arr_sort_students->students + i))->faculti.name_faculti, 
+	 								       (*(arr_sort_students->students + i))->group.group_n, 
+	 								       (*(arr_sort_students->students + i))->name_cafedra,
+	 				          		  	       (*(arr_sort_students->students + i))->enroll_year);
 	}
 	
 	fclose(output_file);
-}*/
+}
 
 /**
  Функція write_out_file
@@ -390,23 +413,25 @@ void write_out_file(char path_output_file[], struct student *student_sort, int n
 
 - Виводимо на екран кожний елемент у масиві `*student_sort`.
 */
-/*void write_on_screen(struct student *student_sort, int n_sort_students)
+void write_on_screen(struct student_arr *arr_sort_students)
 {
-	if(n_sort_students == 0)
+	
+	if(arr_sort_students->n_students == 0)
 		printf("Кількість студентів дорівнює 0");
 	else
 	{	
-		printf("Кількість студентів дорівнює %d\n", n_sort_students);
-		for(int i = 0; i < n_sort_students; i++)
-			printf("\n%s; %s; %s; %s; %s; %s; %d;\n", (*(student_sort + i)).budget_edu, 
-	 				      	  		  (*(student_sort + i)).name_student,  
-	 				          		  (*(student_sort + i)).name_kurator, 
-	 				          		  (*(student_sort + i)).faculti.name_faculti, 
-	 				          		  (*(student_sort + i)).group.group_n, 
-	 				          		  (*(student_sort + i)).name_cafedra,
-	 				          		  (*(student_sort + i)).enroll_year);
+		printf("Кількість студентів дорівнює %d\n", arr_sort_students->n_students);
+		
+		for(unsigned int i = 0; i < (arr_sort_students->n_students); i++)
+			printf("\n%s; %s; %s; %s; %s; %s; %d;\n", (*(arr_sort_students->students + i))->budget_edu, 
+	 							  (*(arr_sort_students->students + i))->name_student,  
+	 							  (*(arr_sort_students->students + i))->name_kurator, 
+	 						          (*(arr_sort_students->students + i))->faculti.name_faculti, 
+	 						          (*(arr_sort_students->students + i))->group.group_n, 
+	 							  (*(arr_sort_students->students + i))->name_cafedra,
+	 				          		  (*(arr_sort_students->students + i))->enroll_year);
 	}
-}*/
+}
 
 
 
