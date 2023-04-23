@@ -1,20 +1,19 @@
 #include "../src/lib.h"
-#include <stdlib.h>
-#include <stdio.h>
 #include <check.h>
-#include <math.h>
 
 
-//Тести для функції "check_path_to_files"
+
+
+//Тести для функції "check_arguments"
 
 START_TEST(test_no_write_arguments)
 {	
 	int number_arguments = 0;
 	char* arr_arguments[1];
-	int expected_code_error = 1;
-	int actual_code_error;
+	unsigned int expected_code_error = 1;
+	unsigned int actual_code_error;
 	
-	actual_code_error = check_path_to_files(number_arguments,arr_arguments);
+	actual_code_error = check_arguments(number_arguments,arr_arguments);
 	
 	ck_assert_int_eq(expected_code_error,actual_code_error);
 }
@@ -24,16 +23,16 @@ START_TEST(test_wrong_qu_arguments)
 {	
 	int number_arguments = 2;
 	char *arr_arguments[1];
-	int expected_code_error = 2;
-	int actual_code_error;
+	unsigned int expected_code_error = 2;
+	unsigned int actual_code_error;
 	
-	actual_code_error = check_path_to_files(number_arguments,arr_arguments);
+	actual_code_error = check_arguments(number_arguments,arr_arguments);
 	
 	ck_assert_int_eq(expected_code_error,actual_code_error);
 	
 	number_arguments = 4;
 	
-	actual_code_error = check_path_to_files(number_arguments,arr_arguments);
+	actual_code_error = check_arguments(number_arguments,arr_arguments);
 	
 	ck_assert_int_eq(expected_code_error,actual_code_error);
 }
@@ -48,17 +47,17 @@ START_TEST(test_not_correct_path)
 	*(arr_arguments + 1) = "homi////";
 	*(arr_arguments + 2) = "dist/text.txt";
 	
-	int expected_code_error = 3;
-	int actual_code_error;
+	unsigned int expected_code_error = 3;
+	unsigned int actual_code_error;
 	
-	actual_code_error = check_path_to_files(number_arguments,arr_arguments);
+	actual_code_error = check_arguments(number_arguments,arr_arguments);
 	
 	ck_assert_int_eq(expected_code_error,actual_code_error);
 	
 	*(arr_arguments + 1) = "/home/vlad/Documents/1cours";
 	*(arr_arguments + 2) = "////text.txt";
 	
-	actual_code_error = check_path_to_files(number_arguments,arr_arguments);
+	actual_code_error = check_arguments(number_arguments,arr_arguments);
 	
 	ck_assert_int_eq(expected_code_error,actual_code_error);
 }
@@ -73,10 +72,10 @@ START_TEST(test_true_arguments)
 	*(arr_arguments + 1) = "test/test_input.txt";
 	*(arr_arguments + 2) = "dist/true_arguments.txt";
 	
-	int expected_code_error = 0;
-	int actual_code_error;
+	unsigned int expected_code_error = 0;
+	unsigned int actual_code_error;
 	
-	actual_code_error = check_path_to_files(number_arguments,arr_arguments);
+	actual_code_error = check_arguments(number_arguments,arr_arguments);
 	
 	ck_assert_int_eq(expected_code_error,actual_code_error);
 }
@@ -84,21 +83,22 @@ END_TEST
 
 
 
+
 //Тести для функції "check_input_data"
 
 START_TEST(test_check_n_students)
 {	
-	char input_file[] = "test/check_n_students/check_n_students";
-	char input_file2[] = "test/check_n_students/check_n_students2";
+	char input_file[] = "test/check_n_students/check_n_students";//не введено кільеість студентів
+	char input_file2[] = "test/check_n_students/check_n_students2";// кількість студенів 0
 	unsigned int result_function[2] = {0,0};
 	unsigned int *res_func = result_function;
-	int expected_code_error[2] = {1,0};
+	int expected_code_error[2] = {4,0};
 	
 	check_input_data(res_func,input_file);
 	
 	ck_assert_int_eq(*(expected_code_error),*(res_func));
 	
-	*(expected_code_error) = 2;
+	*(expected_code_error) = 5;
 	
 	check_input_data(res_func,input_file2);
 	
@@ -111,7 +111,7 @@ START_TEST(test_check_form_education)
 	char input_file[] = "test/check_form_education/check_form_education";
 	unsigned int result_function[2] = {0};
 	unsigned int *res_func = result_function;
-	int expected_code_error[2] = {3,1};
+	int expected_code_error[2] = {6,1};
 	
 	check_input_data(res_func,input_file);
 	
@@ -125,7 +125,7 @@ START_TEST(test_check_name_students)
 	char input_file[] = "test/check_name_students/check_name_students";
 	unsigned int result_function[2] = {0,0};
 	unsigned int *res_func = result_function;
-	int expected_code_error[2] = {4,1};
+	int expected_code_error[2] = {7,1};
 	
 	check_input_data(res_func,input_file);
 	
@@ -139,7 +139,7 @@ START_TEST(test_check_name_curator)
 	char input_file[] = "test/check_name_curator/check_name_curator";
 	unsigned int result_function[2] = {0};
 	unsigned int *res_func = result_function;
-	int expected_code_error[2] = {5,1};
+	int expected_code_error[2] = {8,1};
 	
 	check_input_data(res_func,input_file);
 	
@@ -153,7 +153,7 @@ START_TEST(test_check_name_faculti)
 	char input_file[] = "test/test_check_name_faculti/test_check_name_faculti";
 	unsigned int result_function[2] = {0};
 	unsigned int *res_func = result_function;
-	int expected_code_error[2] = {6,1};
+	int expected_code_error[2] = {9,1};
 	
 	check_input_data(res_func,input_file);
 	
@@ -167,7 +167,7 @@ START_TEST(test_check_group_number)
 	char input_file[] = "test/check_group_number/check_group_number";
 	unsigned int result_function[2] = {0};
 	unsigned int *res_func = result_function;
-	int expected_code_error[2] = {7,1};
+	int expected_code_error[2] = {10,1};
 	
 	check_input_data(res_func,input_file);
 	
@@ -181,7 +181,7 @@ START_TEST(test_check_name_cafedra)
 	char input_file[] = "test/check_name_cafedra/check_name_cafedra";
 	unsigned int result_function[2] = {0};
 	unsigned int *res_func = result_function;
-	int expected_code_error[2] = {8,1};
+	int expected_code_error[2] = {11,1};
 	
 	check_input_data(res_func,input_file);
 	
@@ -190,7 +190,7 @@ START_TEST(test_check_name_cafedra)
 }
 END_TEST
 
-START_TEST(test_right_write_data)
+START_TEST(test_true_write_data)
 {	
 	char file[] = "test/test_input.txt";
 	unsigned int actual_result_function[2] = {0};
@@ -204,28 +204,34 @@ START_TEST(test_right_write_data)
 }
 END_TEST
 
+
+
+
 //Тести для функції "read_from_file"
 
-START_TEST(test_read_from_file)
+START_TEST(test_geration_enroll_year)
 {	
 	char file[] = "test/test_input.txt";
-	FILE *input_file = fopen(file,"r");
-	struct student expected_student[4];
-	int n_str;
+	struct student_arr *actual_arr_students;
+	struct student_arr *expected_arr_sort_students = create_arr_students(0);
 	
-	fscanf(input_file,"Кількість студентів:%d", &n_str);
-	
-	struct student actual_student[4];
-	struct student *p_actual_student = actual_student;
-	
-	read_from_file(file, p_actual_student);
+	actual_arr_students = read_from_file(file);
 	
 	for(int i = 0; i < 4; i++){
-		ck_assert_int_le((*(p_actual_student + i)).enroll_year, 2022);
-		ck_assert_int_ge((*(p_actual_student + i)).enroll_year, 2017);
+		ck_assert_int_le((*(actual_arr_students->students + i))->enroll_year, 2022);
+		ck_assert_int_ge((*(actual_arr_students->students + i))->enroll_year, 2017);
 	}
+	
+	for(unsigned int i = 0; i < actual_arr_students->n_students; i++)
+		free(*(actual_arr_students->students + i));
+	free(actual_arr_students->students);
+	free(actual_arr_students);
+	free(expected_arr_sort_students->students);
+	free(expected_arr_sort_students);
 }
 END_TEST
+
+
 
 
 //Тести для функції "student_sort"
@@ -233,44 +239,67 @@ END_TEST
 START_TEST(test_expected_2_students)
 {	
 	
-	struct student student[4];
-	struct student *p_student = student;
+	struct student_arr *arr_students = create_arr_students(2);
+	for(int i = 0; i < 2; i++)
+		*(arr_students->students + i) = malloc(sizeof(struct student_data));
 	
-	(*p_student).enroll_year = 2018;
-	(*(p_student + 1)).enroll_year = 2018;
+	(*(arr_students->students))->enroll_year = 2018;
+	(*(arr_students->students + 1))->enroll_year = 2018;
 	
-	struct student sort_student[4];
-	struct student *p_sort_student = sort_student;
-	unsigned int number_students[2] = {0,4};
-	unsigned int *n_students = number_students;
-	int expected_n_students = 2;
-	int actual_n_students;
+	struct student_arr *expected_arr_sort_students = create_arr_students(2);
+	struct student_arr *actual_arr_sort_students;
 	
-	actual_n_students = student_sort(p_student, p_sort_student, n_students);
+	actual_arr_sort_students = student_sort(arr_students);
 	
-	ck_assert_int_eq(expected_n_students, actual_n_students);
+	ck_assert_int_eq(expected_arr_sort_students->n_students, actual_arr_sort_students->n_students);
+	
+	for(unsigned int i = 0; i < arr_students->n_students; i++)
+		free(*(arr_students->students + i));
+	free(arr_students->students);
+	free(arr_students);
+	
+	free(expected_arr_sort_students->students);
+	free(expected_arr_sort_students);
+	
+	for(unsigned int i = 0; i < actual_arr_sort_students->n_students; i++)
+		free(*(actual_arr_sort_students->students + i));
+	free(actual_arr_sort_students->students);
+	free(actual_arr_sort_students);
+	
 	
 }
 END_TEST
 
 START_TEST(test_expected_0_students)
 {	
+	struct student_arr *arr_students = create_arr_students(2);
+	for(int i = 0; i < 2; i++)
+		*(arr_students->students + i) = malloc(sizeof(struct student_data));
+		
+	(*(arr_students->students))->enroll_year = 2017;
+	(*(arr_students->students + 1))->enroll_year = 2017;
 	
-	struct student student[4];
-	struct student *p_student = student;
-	struct student sort_student[4];
-	struct student *p_sort_student = sort_student;
-	unsigned int number_students[2] = {0,4};
-	unsigned int *n_students = number_students;
-	int expected_n_students = 0;
-	int actual_n_students;
+	struct student_arr *expected_arr_sort_students = create_arr_students(0);
+	struct student_arr *actual_arr_sort_students;
 	
-	actual_n_students = student_sort(p_student, p_sort_student, n_students);
+	actual_arr_sort_students = student_sort(arr_students);
 	
-	ck_assert_int_eq(expected_n_students, actual_n_students);
+	ck_assert_int_eq(expected_arr_sort_students->n_students, actual_arr_sort_students->n_students);
 	
+	for(unsigned int i = 0; i < arr_students->n_students; i++)
+		free(*(arr_students->students + i));
+	free(arr_students->students);
+	free(arr_students);
+	
+	free(expected_arr_sort_students->students);
+	free(expected_arr_sort_students);
+	
+	free(actual_arr_sort_students->students);
+	free(actual_arr_sort_students);
 }
 END_TEST
+
+
 
 
 Suite *lab_test_suite(void)
@@ -302,11 +331,11 @@ Suite *lab_test_suite(void)
 	tcase_add_test(check_input_data, test_check_name_faculti);
 	tcase_add_test(check_input_data, test_check_group_number);
 	tcase_add_test(check_input_data, test_check_name_cafedra);
-	tcase_add_test(check_input_data, test_right_write_data);
+	tcase_add_test(check_input_data, test_true_write_data);
 	
 	suite_add_tcase(s, check_input_data);
 	
-	tcase_add_test(read_from_file, test_read_from_file);
+	tcase_add_test(read_from_file, test_geration_enroll_year);
 	
 	suite_add_tcase(s, read_from_file);
 	
