@@ -65,13 +65,13 @@ test: dist
                              #(code-coverage)#
 
 leak-check_main1:clean prep main.bin
-	$(V_LAGS) $(V_FLAGS)  --log-file=dist/valgrind_main.log  cat ./assets/text.txt | ./dist/main.bin
+	$(V_LAGS) $(V_FLAGS)  --log-file=dist/valgrind_main.log  ./dist/main.bin ./assets/input.txt dist/text.txt
 leak-check_main2: 
 	$(V_LAGS) $(V_FLAGS) --xml-file=dist/valgrind_main.xml  --xml=yes cat ./assets/text.txt | ./dist/main.bin
 
 leak-check_test2:
 	$(V_LAGS)  $(V_FLAGS) --xml-file=dist/valgrind_test.xml  --xml=yes dist/test.bin
 leak-check_test1:clean prep test.bin
-	$(V_LAGS)  $(V_FLAGS)  --log-file=dist/valgrind_test.log  dist/test.bin
+	$(V_LAGS)  $(V_FLAGS)  --log-file=dist/valgrind_test.log  ./dist/test.bin 
 	
 #-------------------------------------------------------------#

@@ -2,7 +2,7 @@
 \file lib.h
 \brief Бібіиотечный файл
 
-Це файл, який містить декларацію функцій 'check_path_to_files', 'check_input_data', 'read_from_file', 'student_sort', 'write_out_file', 'write_on_screen' та ініціалізацію структур 'group', 'student.
+Це файл, який містить декларацію функцій 'check_arguments', 'check_input_data', 'write_info_error', 'create_arr_students','read_from_file', 'student_sort', 'write_out_file', 'write_on_screen' та ініціалізацію структур 'group', 'student_data', 'student_arr'.
 */
 
 
@@ -32,14 +32,14 @@ struct group
 
 
 /**
-Структура student
+Структура student_data
  	char budget_edu[8] - масив у якому зберігається відповідь на питання чи набжеті студент або ні.
 	name_student[55] -  масив у якому зберігається ім'я студента.
 	name_kurator[55] -  масив у якому зберігається ім'я куратора.
 	int enroll_year - рік у якому поступив студент.
 	struct group faculti - об'єкт типу структури group.
 	struct group group - об'єкт типу структури group.
-	char name_cafedra[200] - масив у якому зберігається ім'я куратора назва кафедри.
+	char name_cafedra[10] - масив у якому зберігається ім'я куратора назва кафедри.
 */
 struct student_data
 {
@@ -52,10 +52,17 @@ struct student_data
 	char name_cafedra[200];
 };
 
+
+
+
+/**
+Структура student_arr
+ 	unsigned int n_students - кількість студентів у масиві
+ 	struct student_data **students - масив вказівників на об'єкти структури student_data
+*/
 struct student_arr
 {
 	unsigned int n_students;
-	unsigned int n_sort_students;
 	struct student_data **students;
 };
 
@@ -63,7 +70,7 @@ struct student_arr
 
 
 /**
-Функція check_path_to_files
+Функція check_arguments
  \param number_arguments - кількість аргументів.
  \param *arr_arguments[] - масив аргусентів.
  \return Повертає номер перевірки як що та не була пройдена або нуль як що все гаразд.
@@ -83,10 +90,21 @@ void check_input_data(unsigned int *res_check, char *path_input_file);
 
 
 
+
+/**
+Функція write_info_error
+ \param *res_check - масив у якому зберігаються дані про помилку.
+*/
 void write_info_error(unsigned int *res_check);
 
 
 
+
+/**
+Функція create_arr_students
+ \param num_students - кількість студентів у масиві
+ \return Повертає адресу на блоки пам'яті.
+*/
 struct student_arr* create_arr_students(unsigned int num_students);
 
 
@@ -94,10 +112,10 @@ struct student_arr* create_arr_students(unsigned int num_students);
 
 /**
 Функція read_from_file
- \param *res_check - масив у якому зберігаються шлях до файлу із данми.
- \param *student -динамічний масив куди їх треба записати.
+ \param *path_input_file - строка із шляхом до файлу де зберігається.
+ \return Повертає адресу на блоки пам'яті.
 */
-//void read_from_file(char path_input_file[], struct student *student);
+struct student_arr* read_from_file(char *path_input_file);
 
 
 
@@ -105,32 +123,28 @@ struct student_arr* create_arr_students(unsigned int num_students);
 /**
 Функція student_sort
  \param *student -динамічний масив який треба відсортувати.
- \param *student_sort - динамічний масив у який треба записати відсортовані елементи.
- \param *n_students - вказівник на масив де зберіється кількість студентів.
- \return Повертає кількість відсортованих елементів.
+ \return Повертає адресу на блоки пам'яті.
 */
-//int student_sort(struct student *student, struct student *student_sort, unsigned int *n_students);
+struct student_arr* student_sort(struct student_arr *student);
 
 
 
 
 /**
 Функція write_out_file
- \param path_input_file[] - шлях до файлу у який потрібно записати дані.
- \param *student_sort -динамічний масив де зберігаються дані для запису.
- \param n_sort_students - кількість елементів у масиві вище.
+ \param *path_output_file - шлях до файлу у який потрібно записати дані.
+ \param *student -динамічний масив де зберігаються дані для виводу.
 */
-//void write_out_file(char path_output_file[], struct student *student_sort, int n_sort_students);
+void write_out_file(char *path_output_file,struct student_arr *student);
 
 
 
 
 /**
-Функція write_out_file
+Функція write_on_screen
  \param *student_sort -динамічний масив де зберігаються дані для виводу на екран.
- \param n_sort_students - кількість елементів у масиві вище.
 */
-//void write_on_screen(struct student *student_sort, int n_sort_students);
+void write_on_screen(struct student_arr *student);
 
 
 
